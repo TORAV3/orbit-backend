@@ -11,9 +11,26 @@ const sequelize = new Sequelize(
   }
 );
 
+const cltbgroup = require("./master/cltbgroup.model")(sequelize, Sequelize);
+const cltbcust = require("./master/cltbcust.model")(sequelize, Sequelize);
+const cldtsrv = require("./master/cldtsrv.model")(sequelize, Sequelize);
+const cltbtypeofpayment = require("./master/cltbtypeofpayment.model")(
+  sequelize,
+  Sequelize
+);
+const cltbtypeofpackage = require("./master/cltbtypeofpackage.model")(
+  sequelize,
+  Sequelize
+);
+const cltbtlc = require("./master/cltbtlc.model")(sequelize, Sequelize);
 const cldtracehtrans = require("./awb.model")(sequelize, Sequelize);
 
 module.exports = {
   sequelize,
-  cldtracehtrans,
+  cltbgroup,
+  cltbcust,
+  cldtsrv,
+  cltbtypeofpayment,
+  cltbtypeofpackage,
+  cltbtlc,
 };
