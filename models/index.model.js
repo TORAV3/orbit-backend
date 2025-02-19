@@ -11,46 +11,25 @@ const sequelize = new Sequelize(
   }
 );
 
-const user = require("./user.model")(sequelize, Sequelize);
-const userDetail = require("./userDetail.model")(sequelize, Sequelize);
-const access = require("./access.model")(sequelize, Sequelize);
-const role = require("./role.model")(sequelize, Sequelize);
-const classModel = require("./classModel.model")(sequelize, Sequelize);
-const topic = require("./topic.model")(sequelize, Sequelize);
-const section = require("./section.model")(sequelize, Sequelize);
-const subsection = require("./subsection.model")(sequelize, Sequelize);
-const intquestion = require("./intquestion.model")(sequelize, Sequelize);
-const test = require("./test.model")(sequelize, Sequelize);
-const soal = require("./soal.model")(sequelize, Sequelize);
-const jawaban = require("./jawaban.model")(sequelize, Sequelize);
-const jawabanBenar = require("./jawabanBenar.model")(sequelize, Sequelize);
-
-user.associate({ userDetail, role, access });
-userDetail.associate({ user });
-access.associate({ user });
-role.associate({ user });
-classModel.associate({ topic, section, test });
-topic.associate({ classModel });
-section.associate({ classModel, subsection });
-subsection.associate({ section });
-test.associate({ classModel, soal });
-soal.associate({ test, jawaban, jawabanBenar });
-jawaban.associate({ soal });
-jawabanBenar.associate({ soal });
+const cltbgroup = require("./master/cltbgroup.model")(sequelize, Sequelize);
+const cltbcust = require("./master/cltbcust.model")(sequelize, Sequelize);
+const cldtsrv = require("./master/cldtsrv.model")(sequelize, Sequelize);
+const cltbtypeofpayment = require("./master/cltbtypeofpayment.model")(
+  sequelize,
+  Sequelize
+);
+const cltbtypeofpackage = require("./master/cltbtypeofpackage.model")(
+  sequelize,
+  Sequelize
+);
+const cltbtlc = require("./master/cltbtlc.model")(sequelize, Sequelize);
 
 module.exports = {
   sequelize,
-  user,
-  userDetail,
-  role,
-  access,
-  classModel,
-  topic,
-  section,
-  subsection,
-  intquestion,
-  test,
-  soal,
-  jawaban,
-  jawabanBenar,
+  cltbgroup,
+  cltbcust,
+  cldtsrv,
+  cltbtypeofpayment,
+  cltbtypeofpackage,
+  cltbtlc,
 };
