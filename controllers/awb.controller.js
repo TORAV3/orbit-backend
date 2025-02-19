@@ -6,7 +6,14 @@ const {
   successCreatedResponse,
   badRequestResponse,
 } = require("../configs/response");
-const { cldtracehtrans } = require("../models/index.model");
+const {
+  cldtracehtrans,
+  cldtsrv,
+  cltbcust,
+  cltbtlc,
+  cltbtypeofpackage,
+  cltbtypeofpayment,
+} = require("../models/index.model");
 
 const getAllAwbDataController = async (req, res) => {
   const startTime = Date.now();
@@ -23,6 +30,23 @@ const getAllAwbDataController = async (req, res) => {
         "trnsubdest",
         "trntotalcharge",
         "trntypeofpayment",
+      ],
+      include: [
+        {
+          model: cldtsrv,
+        },
+        {
+          model: cltbcust,
+        },
+        {
+          model: cltbtlc,
+        },
+        {
+          model: cltbtypeofpackage,
+        },
+        {
+          model: cltbtypeofpayment,
+        },
       ],
     });
 
@@ -330,9 +354,31 @@ const editAwbController = async (req, res, startTime) => {
   }
 };
 
+const deleteAwbController = async (req, res) => {
+  const startTime = Date.now();
+  try {
+    const deleted = await cldtracehtrans.destroy({
+      attributes: ["trnnohawb"],
+      where: { trnnohawb: req.params.id },
+    });
+    if (!deleted) {
+      return notfoundResponse(
+        res,
+        "AWB tidak ditemukan",
+        Date.now() - startTime
+      );
+    }
+    return successResponse(res, "AWB berhasil dihapus", Date.now() - startTime);
+  } catch (error) {
+    console.error(error);
+    return internalServerErrorResponse(res, Date.now() - startTime);
+  }
+};
+
 module.exports = {
   getAllAwbDataController,
   getAwbDataByIdController,
   addAwbController,
   editAwbController,
+  deleteAwbController,
 };

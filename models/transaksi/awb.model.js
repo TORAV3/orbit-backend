@@ -9,11 +9,35 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "",
       },
       trndate: DataTypes.DATE,
-      trntypeofpayment: DataTypes.CHAR(2),
-      trnorg: DataTypes.CHAR(3),
-      trndest: DataTypes.CHAR(3),
+      trntypeofpayment: {
+        type: DataTypes.CHAR(2),
+        references: {
+          model: "cltbtypeofpayment",
+          key: "pyid",
+        },
+      },
+      trnorg: {
+        type: DataTypes.CHAR(3),
+        references: {
+          model: "cltbtlc",
+          key: "tltlccode",
+        },
+      },
+      trndest: {
+        type: DataTypes.CHAR(3),
+        references: {
+          model: "cltbtlc",
+          key: "tltlccode",
+        },
+      },
       trnsubdest: DataTypes.STRING(13),
-      cltbcust_csacc: DataTypes.STRING(16),
+      cltbcust_csacc: {
+        type: DataTypes.STRING(16),
+        references: {
+          model: "cltbcust",
+          key: "csacc",
+        },
+      },
       trnname: DataTypes.STRING(64),
       trnalm1: DataTypes.STRING(64),
       trnalm2: DataTypes.STRING(64),
@@ -23,8 +47,20 @@ module.exports = (sequelize, DataTypes) => {
       trnphone: DataTypes.STRING(16),
       trnfax: DataTypes.STRING(16),
       trncontact: DataTypes.STRING(64),
-      trntypeofpackage: DataTypes.CHAR(3),
-      trntypeofservice: DataTypes.CHAR(3),
+      trntypeofpackage: {
+        type: DataTypes.CHAR(3),
+        references: {
+          model: "cltbtypeofpackage",
+          key: "pkid",
+        },
+      },
+      trntypeofservice: {
+        type: DataTypes.CHAR(3),
+        references: {
+          model: "cldtsrv",
+          key: "svsrv",
+        },
+      },
       trnconsacc: DataTypes.STRING(16),
       trnconsname: DataTypes.STRING(64),
       trnconsalm1: DataTypes.STRING(64),
@@ -138,11 +174,28 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "cldtracehtrans",
+      paranoid: true,
       timestamps: true,
       createdAt: "createdat",
       updatedAt: "updatedat",
+      deletedAt: "deletedat",
     }
   );
+
+  cldtracehtrans.associate = (models) => {
+    cldtracehtrans.belongsTo(models.cltbtypeofpayment, {
+      foreignKey: "trntypeofpayment",
+    });
+    cldtracehtrans.belongsTo(models.cltbcust, { foreignKey: "cltbcust_csacc" });
+    cldtracehtrans.belongsTo(models.cltbtlc, { foreignKey: "trnorg" });
+    cldtracehtrans.belongsTo(models.cltbtlc, { foreignKey: "trndest" });
+    cldtracehtrans.belongsTo(models.cldtsrv, {
+      foreignKey: "trntypeofservice",
+    });
+    cldtracehtrans.belongsTo(models.cltbtypeofpackage, {
+      foreignKey: "trntypeofpackage",
+    });
+  };
 
   return cldtracehtrans;
 };

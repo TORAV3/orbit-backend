@@ -15,6 +15,7 @@ const {
   getAwbDataByIdController,
   addAwbController,
   editAwbController,
+  deleteAwbController,
 } = require("./controllers/awb.controller");
 
 const {
@@ -273,9 +274,9 @@ router.put("/master/tlc/edit/:id", (req, res) => {
 
 router.delete("/master/tlc/delete/:id", deleteCltbtlcByIdController);
 
-router.get("/awb/data", getAllAwbDataController);
-router.get("/awb/data/byid/:id", getAwbDataByIdController);
-router.post("/awb/tambah", (req, res) => {
+router.get("/transaksi/awb/data", getAllAwbDataController);
+router.get("/transaksi/awb/data/byid/:id", getAwbDataByIdController);
+router.post("/transaksi/awb/tambah", (req, res) => {
   const startTime = Date.now();
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -283,7 +284,7 @@ router.post("/awb/tambah", (req, res) => {
   }
   addAwbController(req, res, startTime);
 });
-router.put("/awb/edit/:id", (req, res) => {
+router.put("/transaksi/awb/edit/:id", (req, res) => {
   const startTime = Date.now();
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -291,6 +292,7 @@ router.put("/awb/edit/:id", (req, res) => {
   }
   editAwbController(req, res, startTime);
 });
+router.delete("/transaksi/awb/delete/byid/:id", deleteAwbController);
 
 app.use("/orbit/api", router);
 
