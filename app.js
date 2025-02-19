@@ -10,6 +10,12 @@ const { sequelize } = require("./models/index.model");
 const { errorValidationResponse } = require("./configs/response");
 
 const verifyToken = require("./middlewares/authMiddleware");
+const {
+  getAllAwbDataController,
+  getAwbDataByIdController,
+  addAwbController,
+  editAwbController,
+} = require("./controllers/awb.controller");
 
 const app = express();
 
@@ -42,6 +48,33 @@ app.use(
 );
 
 const router = express.Router();
+
+router.get("/awb/data", getAllAwbDataController);
+router.get("/awb/data/byid/:id", getAwbDataByIdController);
+router.post("/awb/tambah", (req, res) => {
+  const startTime = Date.now();
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const timeExecution = Date.now() - startTime;
+
+    return errorValidationResponse(res, errors, timeExecution);
+  }
+
+  addAwbController(req, res, startTime);
+});
+router.put("/awb/edit/:id", (req, res) => {
+  const startTime = Date.now();
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const timeExecution = Date.now() - startTime;
+
+    return errorValidationResponse(res, errors, timeExecution);
+  }
+
+  editAwbController(req, res, startTime);
+});
 
 app.use("/orbit/api", router);
 
