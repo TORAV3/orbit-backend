@@ -23,7 +23,31 @@ const cltbtypeofpackage = require("./master/cltbtypeofpackage.model")(
   Sequelize
 );
 const cltbtlc = require("./master/cltbtlc.model")(sequelize, Sequelize);
-const cldtracehtrans = require("./awb.model")(sequelize, Sequelize);
+const cldtracehtrans = require("./transaksi/awb.model")(sequelize, Sequelize);
+const cltbrole = require("./cltbrole.model")(sequelize, Sequelize);
+const cltbuser = require("./cltbuser.model")(sequelize, Sequelize);
+const cltbduser = require("./cltbduser.model")(sequelize, Sequelize);
+
+cldtracehtrans.associate({
+  cltbcust,
+  cldtsrv,
+  cltbtypeofpayment,
+  cltbtypeofpackage,
+  cltbtlc,
+});
+
+cltbrole.associate({
+  cltbuser,
+});
+
+cltbuser.associate({
+  cltbduser,
+  cltbrole,
+});
+
+cltbduser.associate({
+  cltbuser,
+});
 
 module.exports = {
   sequelize,
@@ -33,4 +57,8 @@ module.exports = {
   cltbtypeofpayment,
   cltbtypeofpackage,
   cltbtlc,
+  cldtracehtrans,
+  cltbuser,
+  cltbduser,
+  cltbrole,
 };
