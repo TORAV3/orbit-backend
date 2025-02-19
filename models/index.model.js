@@ -23,6 +23,7 @@ const cltbtypeofpackage = require("./master/cltbtypeofpackage.model")(
   Sequelize
 );
 const cltbtlc = require("./master/cltbtlc.model")(sequelize, Sequelize);
+const cldtracehtrans = require("./awb.model")(sequelize, Sequelize);
 
 module.exports = {
   sequelize,

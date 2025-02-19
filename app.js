@@ -10,6 +10,12 @@ const { sequelize } = require("./models/index.model");
 const { errorValidationResponse } = require("./configs/response");
 
 const verifyToken = require("./middlewares/authMiddleware");
+const {
+  getAllAwbDataController,
+  getAwbDataByIdController,
+  addAwbController,
+  editAwbController,
+} = require("./controllers/awb.controller");
 
 const {
   getAllCltbgroupController,
@@ -95,7 +101,6 @@ const router = express.Router();
 
 router.get("/master/groupcustomer/data", getAllCltbgroupController);
 router.get("/master/groupcustomer/data/:id", getAllCltbgroupByIdController);
-
 router.post("/master/groupcustomer/tambah", (req, res) => {
   const startTime = Date.now();
 
@@ -267,6 +272,25 @@ router.put("/master/tlc/edit/:id", (req, res) => {
 });
 
 router.delete("/master/tlc/delete/:id", deleteCltbtlcByIdController);
+
+router.get("/awb/data", getAllAwbDataController);
+router.get("/awb/data/byid/:id", getAwbDataByIdController);
+router.post("/awb/tambah", (req, res) => {
+  const startTime = Date.now();
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return errorValidationResponse(res, errors, Date.now() - startTime);
+  }
+  addAwbController(req, res, startTime);
+});
+router.put("/awb/edit/:id", (req, res) => {
+  const startTime = Date.now();
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return errorValidationResponse(res, errors, Date.now() - startTime);
+  }
+  editAwbController(req, res, startTime);
+});
 
 app.use("/orbit/api", router);
 
