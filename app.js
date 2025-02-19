@@ -67,6 +67,10 @@ const {
 } = require("./controllers/cltbtlc.controller");
 
 const { body } = require("express-validator");
+const {
+  loginController,
+  getLoginDataController,
+} = require("./controllers/auth.controller");
 
 const app = express();
 
@@ -99,6 +103,21 @@ app.use(
 );
 
 const router = express.Router();
+
+router.post("/login", (req, res) => {
+  const startTime = Date.now();
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const timeExecution = Date.now() - startTime;
+
+    return errorValidationResponse(res, errors, timeExecution);
+  }
+
+  loginController(req, res, startTime);
+});
+
+router.get("/login/data", verifyToken, getLoginDataController);
 
 router.get("/master/groupcustomer/data", getAllCltbgroupController);
 router.get("/master/groupcustomer/data/:id", getAllCltbgroupByIdController);
