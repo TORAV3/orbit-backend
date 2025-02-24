@@ -70,6 +70,12 @@ const {
   deleteCltbtlcByIdController,
 } = require("./controllers/cltbtlc.controller");
 
+const {
+  getCheckpointsByHAWBController,
+  postCheckpointController,
+  deleteCheckpointController,
+} = require("./controllers/cltbcheckpoint.controller");
+
 const { body } = require("express-validator");
 const {
   loginController,
@@ -342,6 +348,15 @@ router.post("/transaksi/manifest/tambah", (req, res) => {
 router.delete("/transaksi/manifest/delete/byid/:id", deleteManifestController);
 
 router.get("/transaksi/manifest-detail/bymnid/:id", getAllManifestDetailByManifestIdController);
+
+router.get("/transaction/checkpoint/:hawb", getCheckpointsByHAWBController);
+
+router.post("/transaction/checkpoint/tambah", postCheckpointController);
+
+router.delete(
+  "/transaction/checkpoint/delete/:checkid",
+  deleteCheckpointController
+);
 
 app.use("/orbit/api", router);
 

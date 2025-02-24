@@ -29,6 +29,10 @@ const cltbuser = require("./cltbuser.model")(sequelize, Sequelize);
 const cltbduser = require("./cltbduser.model")(sequelize, Sequelize);
 const cltbdmanifest = require("./transaksi/cltbdmanifest.model")(sequelize, Sequelize);
 const cltbmanifest = require("./transaksi/cltbmanifest.model")(sequelize, Sequelize);
+const cltbcheckpoint = require("./transaksi/cltbcheckpoint.model")(
+  sequelize,
+  Sequelize
+);
 
 cltbcust.associate({
   cldtracehtrans
@@ -79,4 +83,5 @@ module.exports = {
   cltbrole,
   cltbmanifest,
   cltbdmanifest
+  cltbcheckpoint,
 };
