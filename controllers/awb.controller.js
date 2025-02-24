@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 const {
   internalServerErrorResponse,
   successResponse,
@@ -52,6 +52,74 @@ const getAllAwbDataController = async (req, res) => {
 
     const timeExecution = Date.now() - startTime;
     return successResponse(res, awbs, timeExecution);
+  } catch (error) {
+    console.log(error);
+    const timeExecution = Date.now() - startTime;
+    return internalServerErrorResponse(res, timeExecution);
+  }
+};
+
+const getAllAwbDataNotManifestController = async (req, res) => {
+  const startTime = Date.now();
+  try {
+    const awbs = await cldtracehtrans.findAll({
+      attributes: [
+        "trnnohawb",
+      ],
+      where: {
+        cltbmanifest_mnfid: null,
+      },
+    });
+
+    const timeExecution = Date.now() - startTime;
+    return successResponse(res, awbs, timeExecution);
+  } catch (error) {
+    console.log(error);
+    const timeExecution = Date.now() - startTime;
+    return internalServerErrorResponse(res, timeExecution);
+  }
+};
+
+const getAwbDataByListController = async (req, res, startTime) => {
+  const { awbs } = req.body;
+  try {
+    const awbDatas = await cldtracehtrans.findAll({
+      where:{
+        trnnohawb: { [Op.in]: awbs },
+      },
+      attributes: [
+        "trnnohawb",
+        "cltbcust_csacc",
+        "trndate",
+        "trntypeofservice",
+        "trntypeofpackage",
+        "trnorg",
+        "trndest",
+        "trnsubdest",
+        "trntotalcharge",
+        "trntypeofpayment",
+      ],
+      include: [
+        {
+          model: cldtsrv,
+        },
+        {
+          model: cltbcust,
+        },
+        {
+          model: cltbtlc,
+        },
+        {
+          model: cltbtypeofpackage,
+        },
+        {
+          model: cltbtypeofpayment,
+        },
+      ],
+    });
+
+    const timeExecution = Date.now() - startTime;
+    return successResponse(res, awbDatas, timeExecution);
   } catch (error) {
     console.log(error);
     const timeExecution = Date.now() - startTime;
@@ -377,7 +445,9 @@ const deleteAwbController = async (req, res) => {
 
 module.exports = {
   getAllAwbDataController,
+  getAllAwbDataNotManifestController,
   getAwbDataByIdController,
+  getAwbDataByListController,
   addAwbController,
   editAwbController,
   deleteAwbController,

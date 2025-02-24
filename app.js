@@ -16,6 +16,9 @@ const {
   addAwbController,
   editAwbController,
   deleteAwbController,
+  getAllAwbByCustomerIdController,
+  getAwbDataByListController,
+  getAllAwbDataNotManifestController,
 } = require("./controllers/awb.controller");
 
 const {
@@ -32,6 +35,7 @@ const {
   postCltbcustController,
   updateCltbcustController,
   deleteCltbcustByIdController,
+  getCltbcustWithAwbByIdController,
 } = require("./controllers/cltbcust.controller");
 
 const {
@@ -71,6 +75,8 @@ const {
   loginController,
   getLoginDataController,
 } = require("./controllers/auth.controller");
+const { addManifestController, getAllManifestDataController, getManifestDataByIdController, deleteManifestController } = require("./controllers/cltbmanifest.controller");
+const { getAllManifestDetailByManifestIdController } = require("./controllers/cltbdmanifest.controller");
 
 const app = express();
 
@@ -154,6 +160,7 @@ router.delete(
 
 router.get("/master/customer/data", getAllCltbcustController);
 router.get("/master/customer/data/:id", getCltbcustByIdController);
+router.get("/master/customer/wawb/bycustid/:id", getCltbcustWithAwbByIdController);
 
 router.post(
   "/master/customer/tambah",
@@ -294,7 +301,16 @@ router.put("/master/tlc/edit/:id", (req, res) => {
 router.delete("/master/tlc/delete/:id", deleteCltbtlcByIdController);
 
 router.get("/transaksi/awb/data", getAllAwbDataController);
+router.get("/transaksi/awb/data/nmnf", getAllAwbDataNotManifestController);
 router.get("/transaksi/awb/data/byid/:id", getAwbDataByIdController);
+router.post("/transaksi/awb/bylist", (req, res) => {
+  const startTime = Date.now();
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return errorValidationResponse(res, errors, Date.now() - startTime);
+  }
+  getAwbDataByListController(req, res, startTime);
+});
 router.post("/transaksi/awb/tambah", (req, res) => {
   const startTime = Date.now();
   const errors = validationResult(req);
@@ -312,6 +328,20 @@ router.put("/transaksi/awb/edit/:id", (req, res) => {
   editAwbController(req, res, startTime);
 });
 router.delete("/transaksi/awb/delete/byid/:id", deleteAwbController);
+
+router.get("/transaksi/manifest/data", getAllManifestDataController);
+router.get("/transaksi/manifest/data/byid/:id", getManifestDataByIdController);
+router.post("/transaksi/manifest/tambah", (req, res) => {
+  const startTime = Date.now();
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return errorValidationResponse(res, errors, Date.now() - startTime);
+  }
+  addManifestController(req, res, startTime);
+});
+router.delete("/transaksi/manifest/delete/byid/:id", deleteManifestController);
+
+router.get("/transaksi/manifest-detail/bymnid/:id", getAllManifestDetailByManifestIdController);
 
 app.use("/orbit/api", router);
 
