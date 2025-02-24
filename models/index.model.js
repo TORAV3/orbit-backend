@@ -27,10 +27,16 @@ const cldtracehtrans = require("./transaksi/awb.model")(sequelize, Sequelize);
 const cltbrole = require("./cltbrole.model")(sequelize, Sequelize);
 const cltbuser = require("./cltbuser.model")(sequelize, Sequelize);
 const cltbduser = require("./cltbduser.model")(sequelize, Sequelize);
+const cltbdmanifest = require("./transaksi/cltbdmanifest.model")(sequelize, Sequelize);
+const cltbmanifest = require("./transaksi/cltbmanifest.model")(sequelize, Sequelize);
 const cltbcheckpoint = require("./transaksi/cltbcheckpoint.model")(
   sequelize,
   Sequelize
 );
+
+cltbcust.associate({
+  cldtracehtrans
+});
 
 cldtracehtrans.associate({
   cltbcust,
@@ -38,6 +44,16 @@ cldtracehtrans.associate({
   cltbtypeofpayment,
   cltbtypeofpackage,
   cltbtlc,
+});
+
+cltbmanifest.associate({
+  cltbdmanifest,
+  cltbtlc
+});
+
+cltbdmanifest.associate({
+  cltbmanifest,
+  cldtracehtrans,
 });
 
 cltbrole.associate({
@@ -65,5 +81,7 @@ module.exports = {
   cltbuser,
   cltbduser,
   cltbrole,
+  cltbmanifest,
+  cltbdmanifest
   cltbcheckpoint,
 };

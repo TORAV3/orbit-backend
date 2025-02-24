@@ -206,5 +206,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  cltbcust.associate = (models) => {
+    cltbcust.hasMany(models.cldtracehtrans, {
+      foreignKey: "cltbcust_csacc",
+    });
+  };
+
   return cltbcust;
 };

@@ -1,5 +1,5 @@
 const { Sequelize } = require("sequelize");
-const { cltbcust } = require("../models/index.model");
+const { cltbcust, cldtracehtrans } = require("../models/index.model");
 const {
   badRequestResponse,
   successCreatedResponse,
@@ -15,6 +15,24 @@ const getAllCltbcustController = async (req, res) => {
     const cltbcusts = await cltbcust.findAll();
     const timeExecution = Date.now() - startTime;
     return successResponse(res, cltbcusts, timeExecution);
+  } catch (error) {
+    console.error(error);
+    const timeExecution = Date.now() - startTime;
+    return internalServerErrorResponse(res, timeExecution);
+  }
+};
+
+const getCltbcustWithAwbByIdController = async (req, res) => {
+  const startTime = Date.now();
+  try {
+    const cltbcustData = await cltbcust.findOne({
+      attributes: ["csacc"],
+      where: { csacc: req.params.id },
+      include: [{ attributes: ["trnnohawb"], model: cldtracehtrans }],
+    });
+    
+    const timeExecution = Date.now() - startTime;
+    return successResponse(res, cltbcustData, timeExecution);
   } catch (error) {
     console.error(error);
     const timeExecution = Date.now() - startTime;
@@ -88,6 +106,7 @@ const deleteCltbcustByIdController = async (req, res) => {
 module.exports = {
   getAllCltbcustController,
   getCltbcustByIdController,
+  getCltbcustWithAwbByIdController,
   postCltbcustController,
   updateCltbcustController,
   deleteCltbcustByIdController,
